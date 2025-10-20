@@ -5,7 +5,6 @@
 namespace py = pybind11;
 
 PYBIND11_MODULE(flocksim, m) {
-    // By convention, Python class names are in PascalCase (e.g., Simulation)
     py::class_<simulation_flock>(m, "Simulation_flock")
         .def(py::init<double, double, int>(),
              py::arg("length"), py::arg("cutoff"), py::arg("num_particles"))

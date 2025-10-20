@@ -18,16 +18,15 @@ void simulation_flock::makegrid(const std::vector<double>& coordinates) {
     for (int i = 0; i < N; ++i) {
         double x = coordinates[2 * i];
         double y = coordinates[2 * i + 1];
-        int cellx = static_cast<int>(floor(x / r_c));
-        int celly = static_cast<int>(floor(y / r_c));
-        if (cellx >= 0 && cellx < nx && celly >= 0 && celly < ny) {
-            grid[cellx][celly].push_back(i);
-        }
+        int cellx = static_cast<int>(x / r_c);
+        int celly = static_cast<int>(y / r_c);
+        if (cellx >= nx) cellx = nx - 1;
+        if (celly >= ny) celly = ny - 1;
+        if (cellx < 0) cellx = 0; 
+        if (celly < 0) celly = 0; 
+        grid[cellx][celly].push_back(i);      
     }
 }
-
-// force2dhp implementation. Note: 'coordinates' is now 'const' to match the header.
-//sphagetti code
 std::vector<double> simulation_flock::force(const std::vector<double>& coordinates,const std::vector<double>& orientations) {
     double orientationx=0.0,orientationy=0.0, r_ij_x, r_ij_y;
     std::vector<double> particles_in_range(N,0.0);

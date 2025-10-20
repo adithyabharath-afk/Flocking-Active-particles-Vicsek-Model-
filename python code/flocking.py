@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 import flocksim
-print("hi")
 rho=0.7
 v0=50
 eeta=0.12
@@ -28,9 +27,11 @@ r_c=L/10
 sim=flocksim.Simulation_flock(L, r_c, N)
 plot_cords=[]
 plot_orien=[]
-def integrate(coordinates, orientation):
+equilib_orien=None
+def integrate(coordinates, orientation,eeta):
     global plot_cords
     global plot_orien  
+    global equilib_orien
     for i in range(reps):
         print(i)
         coordinates_n=coordinates+v0*orientation*t
@@ -50,21 +51,25 @@ def integrate(coordinates, orientation):
              plot_cords.append(coordinates)
              plot_orien.append(orientation)
         coordinates=coordinates_n
-integrate(coordinates, orientation)
-'''def animate(plot_cords,interval=5):
-    fig=plt.figure()#creating a blank canvas
-    ax=fig.add_subplot()#creates a specific plotting area in the canvas
-    def update(frame):
-        cords=plot_cords[frame]       
-        ax.clear()#erases everything on the ax plotting area,the points,the tilte , the dimentions everything       
-        ax.scatter(cords[:,0],cords[:,1],s=1)
-        ax.set_xlim([0,L])
-        ax.set_ylim([0,L])
-        ax.set_title(f"time{frame*frame_rate:.2f}")
-        ax.grid(True)
-    ani=FuncAnimation(fig,update,frames=len(plot_cords),interval=50)
-    plt.show()
-animate(plot_cords,50)'''
+    return plot_orien
+#integrate(coordinates, orientation)
+def calc_order_parameter(plot_orien):
+    v_a=[]
+    equilib_point=1000  
+    for i in plot_orien[equilib_point:]:
+        sum_orien=np.sum(i,axis=0)
+        avg_vel=v0*sum_orien/N
+        v_a.append(np.linalg.norm(avg_vel)/v0)
+        avg_va=np.mean(v_a)
+    return avg_va
+def noise_driven_phase_transition(noise_list,N_list,rho):
+    va_list=[]
+    for eeta in noise_list:
+        for N in N_list:
+            orien_list=integrate()
+
+            
+
 def animate(plot_cords, plot_orien, interval=50):
     fig = plt.figure()
     ax = fig.add_subplot()
@@ -81,3 +86,4 @@ def animate(plot_cords, plot_orien, interval=50):
     plt.show()
 "final_coords, final_orien = integrate(coordinates, orientation)"
 animate(plot_cords, plot_orien, 50)
+
