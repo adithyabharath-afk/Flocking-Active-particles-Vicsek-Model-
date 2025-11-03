@@ -21,7 +21,7 @@ class VicsekSimulation:
         self.plot_cords = []
         self.plot_orien = []
         print(f"Initialized simulation with N={self.N}, L={self.L:.2f}")
-    def run(self, reps=10000, t=0.01, frame_rate=100):
+    def run(self, reps=1, t=0.01, frame_rate=1):
         for i in range(reps):
             if i % 100 == 0:
                 print(f"Step {i}/{reps}")
@@ -59,7 +59,7 @@ class VicsekSimulation:
             for eeta in self.eeta_list:
                 sim=VicsekSimulation(N=N,L=L,v0=0.03,eeta=eeta)
                 sim.run()
-                va=sim.calculate_order_parameter(equilibration_frames=10)
+                va=sim.calculate_order_parameter(equilibration_frames=1)
                 va_list_temp.append(va)
             va_list[N]=va_list_temp#each list inside va_list corresponds to a particular N      
         return va_list
@@ -155,21 +155,21 @@ class VicsekSimulation:
             ax.set_xlim([0, self.L])
             ax.set_ylim([0, self.L])
             time = frame * frame_rate * t
-            ax.set_title(f"Time: {time:.2f}s | $v_a$: {self.calculate_order_parameter():.3f}")
+            ax.set_title(f"Time: {time:.2f}s | $\phi$: {self.calculate_order_parameter():.3f}")
             ax.grid(True)       
         ani = FuncAnimation(fig, update, frames=len(self.plot_cords), interval=interval)
         plt.show()
 if __name__ == "__main__":
-    N = 5000
-    L = 25
+    N = 300
+    L = 5
     v0 = 0.03
-    eeta = 0.1
+    eeta =0.1
     N_list=[40,100,400,4000,10000]
     eeta_list=np.linspace(0,1,50)
     rho_list=np.linspace(0,10,30)
     simulation = VicsekSimulation(N=N,L=L,v0=v0, eeta=eeta, N_list=N_list, eeta_list=eeta_list, rho_list=rho_list)
-    #simulation.run(reps=5000, frame_rate=50)
-    va_noise = simulation.noise_driven_phase_transition()
+    simulation.run(reps=15000, frame_rate=100)
+    '''va_noise = simulation.noise_driven_phase_transition()
     va_density = simulation.density_driven_phase_transition(L_fixed=20)
     #plotting va vs eeta for different N
     plt.figure(figsize=(8,5))
@@ -195,5 +195,5 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.show()
     order_param = simulation.calculate_order_parameter(equilibration_frames=10)
-    print(f"\nFinal time-averaged order parameter <v_a>: {order_param:.4f}")
+    print(f"\nFinal time-averaged order parameter <v_a>: {order_param:.4f}")'''
     simulation.animate(frame_rate=200)
